@@ -114,7 +114,7 @@ class Dots():
 
     def check(self, small_dots, large_dots, corona, bacteria):
         '''in - (self, list of small pellets, list of large pellets, pacman, list of ghosts)
-        Checks if pacman has eaten pellets, deletes eaten pellets, and plays pickup sound.'''
+        Проверяет, проглочены ли вирусом точки, удаляет съеденное, воспроизводит звук.'''
         for i, p in enumerate(small_dots[:]):
             p_rect = Dots.imageRects[0]
             (p_rect.centerx, p_rect.centery) = p
