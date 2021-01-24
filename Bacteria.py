@@ -1,4 +1,4 @@
-# Lera lox
+
 
 import pygame
 
@@ -29,24 +29,22 @@ class Bacteria(Character):
         self.isBlue_time = 0
 
     def makeBlue(self):
-        '''in - (self)
-        Меняет антитела на голубые.'''
+        #  Меняет антитела на голубые.
         self.isBlue = True
         self.isBlue_time = Bacteria.ISBLUE_TIME  # количество кадров
         self.surface = Bacteria.images[1]
         self.course = []
 
     def makeNotBlue(self):
-        '''in - (self)
-        Меняет голубое антитело на обычное.'''
+        
+        #  Меняет голубое антитело на обычное.
         self.surface = Bacteria.images[0]
         self.course = []
         self.isBlue = False
         self.isBlue_time = 0
 
     def checkBlue(self):
-        '''in - (self)
-    Проверяет, должно ли антитело вернуться в нормальное состояние, и делает это при необходимости.'''
+        #  Проверяет, должно ли антитело вернуться в нормальное состояние, и делает это при необходимости.
         self.isBlue_time -= 1
         if self.isBlue_time <= 0:
             self.makeNotBlue()
