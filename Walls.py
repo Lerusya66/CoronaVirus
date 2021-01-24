@@ -63,6 +63,6 @@ class Walls():
         walls.append(pygame.Rect((268, 304), (113, 7)))
         walls.append(pygame.Rect((268, 344), (112, 16)))
         walls.append(pygame.Rect((316, 455), (16, 50)))
-        # This wall blocks off the central box area, as it is a trap for ghosts
+        # Стена блокирует центр игрового поля, создает ловушку для антител
         walls.append(pygame.Rect((268, 248), (112, 64)))
         return walls
