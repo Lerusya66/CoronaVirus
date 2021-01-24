@@ -1,4 +1,4 @@
-# Set up pygame and modules
+# Импортируем сам пайгейм и распаковываем его модули
 import pygame
 from pygame.locals import *
 
@@ -6,7 +6,7 @@ pygame.init()
 
 from Constants import *
 
-# Create window
+# Рисуем окошко игры
 wSurface = pygame.display.set_mode(WINDOWSIZE, 0, 32)
 pygame.display.set_caption("CoronaVirus eats people!!")
 
@@ -16,7 +16,7 @@ from Walls import Walls
 from Dots import Dots
 from Sound import Sound
 
-# Create game objects
+# Создаем объекты для игры
 background = pygame.image.load("bg.png").convert()
 corona = CoronaVirus()
 bacteria = [AntiBody()]
@@ -27,7 +27,7 @@ clock = pygame.time.Clock()
 pygame.mixer.music.load("bg_music.mp3")
 pygame.mixer.music.set_volume(0.1)
 
-# Opening screen and music
+# Открываем окно игры, включаем музыку
 Sound.channel.play(Sound.opening)
 wSurface.fill((0, 0, 0))
 wSurface.blit(background, (100, 0))
@@ -53,9 +53,9 @@ while keepGoing_game:
     pygame.mixer.music.play(-1, 0.0)
     while keepGoing_round:
 
-        # Event handling
+        # Обрабатываем событие
         for event in pygame.event.get():
-            # Quitting
+            # Заканчиваем обработку
             if event.type == QUIT:
                 keepGoing_game = keepGoing_round = False
 
@@ -78,31 +78,31 @@ while keepGoing_game:
                     corona.moveUp = corona.moveLeft = corona.moveDown = False
                     corona.direction = 3
 
-            # Arrow key up
+            # Проверяем нажатие клавиши
             elif event.type == KEYUP:
                 corona.moveUp = corona.moveLeft = corona.moveDown = corona.moveRight = False
 
-        # Move pacman rectangle
+        # Перемещаем вирус
         corona.move_c(walls)
 
-        # Check if pacman must teleport to the other side
+        # Проверяем, должен ли телепортироваться вирус
         corona.teleport()
 
-        # Animate and rotate pacman sprite
+        # Организуем с помощью sprite повороты вируса, анимацию
         corona.getSurface()
 
-        # Check if pacman has eaten any pellets and delete them
+        # Проверяяем, съел ли вирус точку, удаляем ее, если да
         Dots.check(Dots(), small_dots, large_dots, corona, bacteria)
 
-        # Add a new ghost if necessary
+        # Добавляем антитело при необходимости
         AntiBody.add(AntiBody(), bacteria)
 
-        # Check if blue ghosts must return to normal
+        # Проверяем, вернулись ли голубые антитела в нормальное состояние
         for g in bacteria:
             if g.isBlue:
                 g.checkBlue()
 
-        # Move ghosts
+        # Располагаем антитела
         for g in bacteria:
             g.move(walls, corona)
 
@@ -120,7 +120,7 @@ while keepGoing_game:
         wSurface.blit(corona.surface, corona.rect)
         pygame.display.update()
 
-        # Check if pacman collided with a ghost
+        # Проверяем, не столкнулся вирус с антителом
         for g in bacteria[:]:
             if corona.rect.colliderect(g.rect):
                 if not g.isBlue:
@@ -137,12 +137,12 @@ while keepGoing_game:
                     Sound.channel.play(Sound.eatGhost)
 
 
-        # проверка съедены ли все точки
+        # Проверяем, съедены ли все точки
         else:
             if len(small_dots) == 0 and len(large_dots) == 0:
                 keepGoing_game = keepGoing_round = False
         clock.tick(FPS)
-    # Reset round
+    # Убираем точки
     pygame.mixer.music.stop()
     corona.reset()
     for g in bacteria:
@@ -151,19 +151,19 @@ while keepGoing_game:
         if not pygame.mixer.get_busy():
             break
 
-# End of game screen
+# Закрываем окно игры
 wSurface.fill((0, 0, 0))
 surface_temp = None
 
-if corona.lives == 0:  # Player loses
+if corona.lives == 0:  # Проигрыш
     Sound.channel.play(Sound.lose)
     surface_temp = corona.getLosingSurface()
 
-elif len(small_dots) == 0 and len(large_dots) == 0:  # Player wins
+elif len(small_dots) == 0 and len(large_dots) == 0:  # Выигрыш
     Sound.channel.play(Sound.win)
     surface_temp = corona.getWinningSurface()
 
-if surface_temp != None:  # Player loses or wins (does not quit)
+if surface_temp != None:  # Игрок проиграл или выиграл, но не вышел из игры
     rect_temp = surface_temp.get_rect()
     rect_temp.center = wSurface.get_rect().center
     wSurface.blit(surface_temp, rect_temp)
