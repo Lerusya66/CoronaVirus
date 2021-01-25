@@ -57,8 +57,7 @@ class CoronaVirus(Character):
             self.move(3)
 
     def teleport(self):
-        '''in - (self)
-        Determines if pacman collided with one of teleport locations and moves him.'''
+        # Определяет, столкнулся ли вирус с телепортом и перемещает его
         if self.rect.colliderect(pygame.Rect((100, 256), (6, 48))):
             self.rect.left += 400
         if self.rect.colliderect(pygame.Rect((549, 256), (6, 48))):
@@ -69,16 +68,12 @@ class CoronaVirus(Character):
             self.rect.left -= 400
 
     def getScoreSurface(self):
-        '''in - (self)
-        Creates surface object of pacman's score.
-        out - Surface'''
+        # Считает очки
         global YELLOW
         return pygame.font.SysFont(None, 48).render("Score: " + str(self.score), True, YELLOW)
 
     def getLivesSurface(self):
-        '''in - (self)
-        Creates surface object of pacman's lives.
-        out - Surface'''
+        # Считает жизни вируса
         global YELLOW
         surface = pygame.font.SysFont(None, 48).render("Lives:          ", True, YELLOW)
         x = 110
@@ -88,15 +83,11 @@ class CoronaVirus(Character):
         return surface
 
     def getWinningSurface(self):
-        '''in - (self)
-        Creates surface object of 'You Win!',
-        out - Surface'''
+        # Пишет "Вы выиграли!"
         global YELLOW
         return pygame.font.SysFont(None, 72).render("You Win!", True, YELLOW)
 
     def getLosingSurface(self):
-        '''in - (self)
-        Creates surface object of 'You Lose...'.
-        out - Surface'''
+        # Пишет "Вы проиграли!"
         global YELLOW
         return pygame.font.SysFont(None, 72).render("You Lose...", True, YELLOW)
