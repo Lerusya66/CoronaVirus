@@ -42,24 +42,21 @@ class AntiBody(Character):
         self.isBlue_time = 0
 
     def checkBlue(self):
-        '''in - (self)
-        Checks if the ghost should return to normal, and does if necessary.'''
+        #  Проверяет, должно ли антитело вернуться в нормальное состояние, и делает это при необходимости.
         self.isBlue_time -= 1
         if self.isBlue_time <= 0:
             self.makeNotBlue()
 
     def reset(self):
-        '''in - (self)
-        Resets ghost's position and makes it regular (not blue).'''
+        # Сбрасывает положение антитела и делает его обычным.
         self.makeNotBlue()
         self.rect.left = 315
         self.rect.top = 275
         self.course = [0] * int(50 / self.speed)
 
     def add(self, ghosts):
-        '''in - (self, list of ghosts)
-        Determines is a ghost must be added, adds it to the list, and resets the add ghost timer.
-        Subtracts from the add ghost timer is no ghost is added.'''
+        # Определяет, должно ли быть добавлено антитело, добавляет его в список и сбрасывает таймер добавления антитела.
+        # Вычитает/прибавляет время в таймере
         AntiBody.add_time -= 1
         if len(ghosts) == 0:
             if AntiBody.add_time > int(AntiBody.ADD_TIME / 10.0):
@@ -70,10 +67,8 @@ class AntiBody(Character):
             AntiBody.add_time = AntiBody.ADD_TIME
 
     def canMove_distance(self, direction, walls):
-        '''in - (self, direction, list of walls)
-        Determines the number of steps the ghost can take in the specified direction.
-        out - int'''
-        #test = copy.deepcopy(self)
+        # Определяет количество шагов, которые антитело может сделать в указанном направлении
+        # test = copy.deepcopy(self)
         counter = 0
         while True:
             if not Character.canMove(self, direction, walls):
@@ -83,8 +78,7 @@ class AntiBody(Character):
         return counter
 
     def move(self, walls, pacman):
-        '''in - (self, list of walls, pacman)
-        Uses AI to move ghost towards pacman.'''
+        # Использует ИИ для перемещения антитела к вирусу.
         if len(self.course) > 0:
             if self.canMove(self.course[0], walls) or self.rect.colliderect(pygame.Rect((268, 248), (112, 64))):
                 Character.move(self, self.course[0])
@@ -97,47 +91,47 @@ class AntiBody(Character):
             yDistance = pacman.rect.top - self.rect.top
             choices = [-1, -1, -1, -1]
 
-            if abs(xDistance) > abs(yDistance):  # horizontal 1st
-                if xDistance > 0:  # right 1st
+            if abs(xDistance) > abs(yDistance):  # горизонтально 1
+                if xDistance > 0:  # право 1
                     choices[0] = 3
                     choices[3] = 1
-                elif xDistance < 0:  # left 1st
+                elif xDistance < 0:  # лево 1
                     choices[0] = 1
                     choices[3] = 3
 
-                if yDistance > 0:  # down 2nd
+                if yDistance > 0:  # вниз 2
                     choices[1] = 2
                     choices[2] = 0
-                elif yDistance < 0:  # up 2nd
+                elif yDistance < 0:  # наверх 2
                     choices[1] = 0
                     choices[2] = 2
                 else:  # yDistance == 0
-                    if self.canMove_distance(2, walls) < self.canMove_distance(0, walls):  # down 2nd
+                    if self.canMove_distance(2, walls) < self.canMove_distance(0, walls):  # вниз 2
                         choices[1] = 2
                         choices[2] = 0
-                    elif self.canMove_distance(0, walls) < self.canMove_distance(2, walls):  # up 2nd
+                    elif self.canMove_distance(0, walls) < self.canMove_distance(2, walls):  # наверх 2
                         choices[1] = 0
                         choices[2] = 2
 
-            elif abs(yDistance) >= abs(xDistance):  # vertical 1st
-                if yDistance > 0:  # down 1st
+            elif abs(yDistance) >= abs(xDistance):  # вертикально 1
+                if yDistance > 0:  # вниз 1
                     choices[0] = 2
                     choices[3] = 0
-                elif yDistance < 0:  # up 1st
+                elif yDistance < 0:  # наверх 1
                     choices[0] = 0
                     choices[3] = 2
 
-                if xDistance > 0:  # right 2nd
+                if xDistance > 0:  # право 2
                     choices[1] = 3
                     choices[2] = 1
-                elif xDistance < 0:  # left 2nd
+                elif xDistance < 0: # лево 2
                     choices[1] = 1
                     choices[2] = 3
                 else:  # xDistance == 0
-                    if self.canMove_distance(3, walls) < self.canMove_distance(1, walls):  # right 2nd
+                    if self.canMove_distance(3, walls) < self.canMove_distance(1, walls):  # право 2
                         choices[1] = 3
                         choices[2] = 1
-                    elif self.canMove_distance(1, walls) < self.canMove_distance(3, walls):  # left 2nd
+                    elif self.canMove_distance(1, walls) < self.canMove_distance(3, walls):  # лево 2
                         choices[1] = 1
                         choices[2] = 3
 
@@ -150,7 +144,7 @@ class AntiBody(Character):
 
             if len(choices) > 0:
                 Character.move(self, choices[0])
-                if choices_original.index(choices[0]) >= 2:  # if move is 3rd or 4th choice
+                if choices_original.index(choices[0]) >= 2:  # если ход 3-й или 4-й выбор
                     global FPS
                     for i in range(int(FPS * 1.5)):
                         self.course.append(choices[0])
