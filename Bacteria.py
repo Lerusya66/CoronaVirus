@@ -50,17 +50,15 @@ class Bacteria(Character):
             self.makeNotBlue()
 
     def reset(self):
-        '''in - (self)
-        Сбрасывает положение антитела и делает его обычным.'''
+        # Сбрасывает положение антитела и делает его обычным.
         self.makeNotBlue()
         self.rect.left = 315
         self.rect.top = 275
         self.course = [0] * int(50 / self.speed)
 
     def add(self, ghosts):
-        '''in - (self, list of ghosts)
-        Определяет, должно ли быть добавлено антитело, добавляет его в список и сбрасывает таймер добавления антитела.
-        Вычитает/прибавляет время в таймере'''
+        # Определяет, должно ли быть добавлено антитело, добавляет его в список и сбрасывает таймер добавления антитела.
+        # Вычитает/прибавляет время в таймере
         Bacteria.add_time -= 1
         if len(ghosts) == 0:
             if Bacteria.add_time > int(Bacteria.ADD_TIME / 10.0):
@@ -71,10 +69,8 @@ class Bacteria(Character):
             Bacteria.add_time = Bacteria.ADD_TIME
 
     def canMove_distance(self, direction, walls):
-        '''in - (self, direction, list of walls)
-        Определяет количество шагов, которые антитело может сделать в указанном направлении        .
-        out - int'''
-        #test = copy.deepcopy(self)
+        # Определяет количество шагов, которые антитело может сделать в указанном направлении
+        # test = copy.deepcopy(self)
         counter = 0
         while True:
             if not Character.canMove(self, direction, walls):
@@ -84,8 +80,7 @@ class Bacteria(Character):
         return counter
 
     def move(self, walls, pacman):
-        '''in - (self, list of walls, pacman)
-        Использует ИИ для перемещения антитела к вирусу.'''
+        # Использует ИИ для перемещения антитела к вирусу.
         if len(self.course) > 0:
             if self.canMove(self.course[0], walls) or self.rect.colliderect(pygame.Rect((268, 248), (112, 64))):
                 Character.move(self, self.course[0])
