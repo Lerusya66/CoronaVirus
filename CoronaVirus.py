@@ -47,13 +47,13 @@ class CoronaVirus(Character):
 
     def move_c(self, walls):
         #  проверка возможности движения и движение
-        if self.moveUp and self.canMove(0, walls):
+        if self.moveUp and self.isCharacterCanMove(0, walls):
             self.move(0)
-        if self.moveLeft and self.canMove(1, walls):
+        if self.moveLeft and self.isCharacterCanMove(1, walls):
             self.move(1)
-        if self.moveDown and self.canMove(2, walls):
+        if self.moveDown and self.isCharacterCanMove(2, walls):
             self.move(2)
-        if self.moveRight and self.canMove(3, walls):
+        if self.moveRight and self.isCharacterCanMove(3, walls):
             self.move(3)
 
     def teleport(self):

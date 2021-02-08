@@ -7,17 +7,17 @@ from Constants import *
 
 
 class AntiBody(Character):
-    images = [pygame.image.load("orange_0.png").convert(),
-              pygame.image.load("cyan_0.png").convert()]
-    for i in range(len(images)):
-        images[i].set_colorkey((0, 0, 0))
-    ISBLUE_TIME = int(10 * FPS)
-    ADD_TIME = int(30 * FPS)
-    add_time = ADD_TIME
 
     def __init__(self):
         super().__init__()
-        self.surface = AntiBody.images[0]
+        self.images = [pygame.image.load("антитело1.png").convert(),
+                  pygame.image.load("антитело2.png").convert()]
+        for i in range(len(self.images)):
+            self.images[i].set_colorkey((0, 0, 0))
+        self.ISBLUE_TIME = int(10 * FPS)
+        self.ADD_TIME = int(30 * FPS)
+        self.add_time = self.ADD_TIME
+        self.surface = self.images[0]
         self.rect = self.surface.get_rect()
         self.rect.left = 315
         self.rect.top = 275
@@ -29,14 +29,13 @@ class AntiBody(Character):
     def makeBlue(self):
         #  делает антитело голубым
         self.isBlue = True
-        self.isBlue_time = AntiBody.ISBLUE_TIME  # number of frames
-        self.surface = AntiBody.images[1]
+        self.isBlue_time = self.ISBLUE_TIME  # number of frames
+        self.surface = self.images[1]
         self.course = []
 
-    def makeNotBlue(self):
-        '''in - (self)
-        Changes blue ghost into a regular ghost.'''
-        self.surface = AntiBody.images[0]
+    def makeRed(self):
+        #  меняет цвет на красный
+        self.surface = self.images[0]
         self.course = []
         self.isBlue = False
         self.isBlue_time = 0
@@ -45,11 +44,11 @@ class AntiBody(Character):
         #  Проверяет, должно ли антитело вернуться в нормальное состояние, и делает это при необходимости.
         self.isBlue_time -= 1
         if self.isBlue_time <= 0:
-            self.makeNotBlue()
+            self.makeRed()
 
     def reset(self):
         # Сбрасывает положение антитела и делает его обычным.
-        self.makeNotBlue()
+        self.makeRed()
         self.rect.left = 315
         self.rect.top = 275
         self.course = [0] * int(50 / self.speed)
@@ -57,31 +56,31 @@ class AntiBody(Character):
     def add(self, ghosts):
         # Определяет, должно ли быть добавлено антитело, добавляет его в список и сбрасывает таймер добавления антитела.
         # Вычитает/прибавляет время в таймере
-        AntiBody.add_time -= 1
+        self.add_time -= 1
         if len(ghosts) == 0:
-            if AntiBody.add_time > int(AntiBody.ADD_TIME / 10.0):
-                AntiBody.add_time = int(AntiBody.ADD_TIME / 10.0)
+            if self.add_time > int(self.ADD_TIME / 10.0):
+                self.add_time = int(self.ADD_TIME / 10.0)
 
-        if AntiBody.add_time <= 0:
+        if self.add_time <= 0:
             ghosts.append(AntiBody())
-            AntiBody.add_time = AntiBody.ADD_TIME
+            self.add_time = self.ADD_TIME
 
     def canMove_distance(self, direction, walls):
         # Определяет количество шагов, которые антитело может сделать в указанном направлении
         # test = copy.deepcopy(self)
         counter = 0
         while True:
-            if not Character.canMove(self, direction, walls):
+            if not self.isCharacterCanMove(direction, walls):
                 break
-            Character.move(self, direction)
+            self.move(direction)
             counter += 1
         return counter
 
-    def move(self, walls, pacman):
+    def move_antibody(self, walls, pacman):
         # Использует ИИ для перемещения антитела к вирусу.
         if len(self.course) > 0:
-            if self.canMove(self.course[0], walls) or self.rect.colliderect(pygame.Rect((268, 248), (112, 64))):
-                Character.move(self, self.course[0])
+            if self.isCharacterCanMove(self.course[0], walls) or self.rect.colliderect(pygame.Rect((268, 248), (112, 64))):
+                self.move(self.course[0])
                 del self.course[0]
             else:
                 self.course = []
@@ -139,11 +138,11 @@ class AntiBody(Character):
                 choices.reverse()
             choices_original = choices[:]
             for i, x in enumerate(choices[:]):
-                if x == -1 or (not Character.canMove(self, x, walls)):
+                if x == -1 or (not self.isCharacterCanMove(x, walls)):
                     del choices[choices.index(x)]
 
             if len(choices) > 0:
-                Character.move(self, choices[0])
+                self.move(choices[0])
                 if choices_original.index(choices[0]) >= 2:  # если ход 3-й или 4-й выбор
                     global FPS
                     for i in range(int(FPS * 1.5)):

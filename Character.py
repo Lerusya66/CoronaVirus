@@ -2,12 +2,11 @@
 
 class Character():
     def __init__(self):
-        '''in - (self)'''
         self.surface = None
         self.rect = None
         self.speed = None
 
-    def canMove(self, direction, walls):
+    def isCharacterCanMove(self, direction, walls):
         #  проверка можно ли двигаться без столкновения со стенами
         if direction == 0:
             moved_rect = self.rect.move((0, -self.speed))
@@ -24,8 +23,7 @@ class Character():
         return True
 
     def move(self, direction):
-        '''in - (self, direction (0-3))
-        Moves character in specified direction.'''
+        #  перемещает персонажа в определенном направлении
         if direction == 0:
             self.rect.top -= self.speed
         elif direction == 1:

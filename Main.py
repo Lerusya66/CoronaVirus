@@ -19,7 +19,7 @@ from Sound import Sound
 # Создаем объекты для игры
 background = pygame.image.load("bg.png").convert()
 corona = CoronaVirus()
-bacteria = [AntiBody()]
+antybody = [AntiBody()]
 walls = Walls.createList(Walls())
 small_dots = Dots.createListSmall(Dots())
 large_dots = Dots.createListLarge(Dots())
@@ -37,8 +37,8 @@ for p in small_dots:
     wSurface.blit(Dots.images[0], (p[0] + Dots.shifts[0][0], p[1] + Dots.shifts[0][1]))
 for p in large_dots:
     wSurface.blit(Dots.images[1], (p[0] + Dots.shifts[1][0], p[1] + Dots.shifts[1][1]))
-for g in bacteria:
-    wSurface.blit(g.surface, g.rect)
+for cur_anti in antybody:
+    wSurface.blit(cur_anti.surface, cur_anti.rect)
 wSurface.blit(corona.surface, corona.rect)
 pygame.display.update()
 while True:
@@ -46,18 +46,18 @@ while True:
         break
 
 # Основной цикл игры
-keepGoing_game = True
-while keepGoing_game:
+game_is_on = True
+while game_is_on:
     # Один раунд
-    keepGoing_round = True
+    round_is_on = True
     pygame.mixer.music.play(-1, 0.0)
-    while keepGoing_round:
+    while round_is_on:
 
         # Обрабатываем событие
         for event in pygame.event.get():
             # Заканчиваем обработку
             if event.type == QUIT:
-                keepGoing_game = keepGoing_round = False
+                game_is_on = round_is_on = False
 
             # Нажатия кнопок
             elif event.type == KEYDOWN:
@@ -92,19 +92,19 @@ while keepGoing_game:
         corona.getSurface()
 
         # Проверяяем, съел ли вирус точку, удаляем ее, если да
-        Dots.check(Dots(), small_dots, large_dots, corona, bacteria)
+        Dots.check(Dots(), small_dots, large_dots, corona, antybody)
 
         # Добавляем антитело при необходимости
-        AntiBody.add(AntiBody(), bacteria)
+        AntiBody.add(AntiBody(), antybody)
 
         # Проверяем, вернулись ли голубые антитела в нормальное состояние
-        for g in bacteria:
-            if g.isBlue:
-                g.checkBlue()
+        for cur_anti in antybody:
+            if cur_anti.isBlue:
+                cur_anti.checkBlue()
 
         # Располагаем антитела
-        for g in bacteria:
-            g.move(walls, corona)
+        for cur_anti in antybody:
+            cur_anti.move_antibody(walls, corona)
 
         # Draw screen
         wSurface.fill((0, 0, 0))
@@ -115,24 +115,24 @@ while keepGoing_game:
             wSurface.blit(Dots.images[0], (p[0] + Dots.shifts[0][0], p[1] + Dots.shifts[0][1]))
         for p in large_dots:
             wSurface.blit(Dots.images[1], (p[0] + Dots.shifts[1][0], p[1] + Dots.shifts[1][1]))
-        for g in bacteria:
-            wSurface.blit(g.surface, g.rect)
+        for cur_anti in antybody:
+            wSurface.blit(cur_anti.surface, cur_anti.rect)
         wSurface.blit(corona.surface, corona.rect)
         pygame.display.update()
 
         # Проверяем, не столкнулся вирус с антителом
-        for g in bacteria[:]:
-            if corona.rect.colliderect(g.rect):
-                if not g.isBlue:
-                    keepGoing_round = False
+        for cur_anti in antybody[:]:
+            if corona.rect.colliderect(cur_anti.rect):
+                if not cur_anti.isBlue:
+                    round_is_on = False
                     corona.lives -= 1
                     if corona.lives == 0:
-                        keepGoing_game = False
+                        game_is_on = False
                     else:
                         Sound.channel.play(Sound.death)
                     break
                 else:  # Ghost is blue
-                    del bacteria[bacteria.index(g)]
+                    del antybody[antybody.index(cur_anti)]
                     corona.score += 100
                     Sound.channel.play(Sound.eatGhost)
 
@@ -140,13 +140,13 @@ while keepGoing_game:
         # Проверяем, съедены ли все точки
         else:
             if len(small_dots) == 0 and len(large_dots) == 0:
-                keepGoing_game = keepGoing_round = False
+                game_is_on = round_is_on = False
         clock.tick(FPS)
     # Убираем точки
     pygame.mixer.music.stop()
     corona.reset()
-    for g in bacteria:
-        g.reset()
+    for cur_anti in antybody:
+        cur_anti.reset()
     while True:
         if not pygame.mixer.get_busy():
             break
