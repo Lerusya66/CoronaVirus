@@ -24,7 +24,7 @@ walls = Pattern().walls
 small_dots = Dots().createListSmall()
 large_dots = Dots().createListLarge()
 clock = pygame.time.Clock()
-pygame.mixer.music.load("bg_music.mp3")
+pygame.mixer.music.load("песняЯрика.mp3")
 pygame.mixer.music.set_volume(0.1)
 
 # Открываем окно игры, включаем музыку
