@@ -26,6 +26,17 @@ class AntiBody(Character):
         self.isBlue = False
         self.isBlue_time = 0
 
+    def teleport(self):
+        # Определяет, столкнулось ли антитело с телепортом и перемещает его
+        if self.rect.colliderect(pygame.Rect((100, 256), (6, 48))):
+            self.rect.left += 400
+        if self.rect.colliderect(pygame.Rect((549, 256), (6, 48))):
+            self.rect.left -= 400
+        if self.rect.left < 100:
+            self.rect.left += 400
+        if self.rect.left > 550:
+            self.rect.left -= 400
+
     def makeBlue(self):
         #  делает антитело голубым
         self.isBlue = True
@@ -53,16 +64,16 @@ class AntiBody(Character):
         self.rect.top = 275
         self.course = [0] * int(50 / self.speed)
 
-    def add(self, ghosts):
+    def add(self, antibody):
         # Определяет, должно ли быть добавлено антитело, добавляет его в список и сбрасывает таймер добавления антитела.
         # Вычитает/прибавляет время в таймере
         self.add_time -= 1
-        if len(ghosts) == 0:
+        if len(antibody) == 0:
             if self.add_time > int(self.ADD_TIME / 10.0):
                 self.add_time = int(self.ADD_TIME / 10.0)
 
         if self.add_time <= 0:
-            ghosts.append(AntiBody())
+            antibody.append(AntiBody())
             self.add_time = self.ADD_TIME
 
     def canMove_distance(self, direction, walls):
@@ -76,8 +87,8 @@ class AntiBody(Character):
             counter += 1
         return counter
 
-    def move_antibody(self, walls, pacman):
-        # Использует ИИ для перемещения антитела к вирусу.
+    def move_antibody(self, walls, corona):
+        # Направляет к вирусу
         if len(self.course) > 0:
             if self.isCharacterCanMove(self.course[0], walls) or self.rect.colliderect(pygame.Rect((268, 248), (112, 64))):
                 self.move(self.course[0])
@@ -86,8 +97,8 @@ class AntiBody(Character):
                 self.course = []
 
         else:
-            xDistance = pacman.rect.left - self.rect.left
-            yDistance = pacman.rect.top - self.rect.top
+            xDistance = corona.rect.left - self.rect.left
+            yDistance = corona.rect.top - self.rect.top
             choices = [-1, -1, -1, -1]
 
             if abs(xDistance) > abs(yDistance):  # горизонтально 1

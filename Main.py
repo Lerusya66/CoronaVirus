@@ -12,7 +12,7 @@ pygame.display.set_caption("CoronaVirus eats people!!")
 
 from CoronaVirus import CoronaVirus
 from AntiBody import AntiBody
-from Walls import Walls
+from Pattern import Pattern
 from Dots import Dots
 from Sound import Sound
 
@@ -20,23 +20,24 @@ from Sound import Sound
 background = pygame.image.load("bg.png").convert()
 corona = CoronaVirus()
 antybody = [AntiBody()]
-walls = Walls.createList(Walls())
-small_dots = Dots.createListSmall(Dots())
-large_dots = Dots.createListLarge(Dots())
+walls = Pattern().walls
+small_dots = Dots().createListSmall()
+large_dots = Dots().createListLarge()
 clock = pygame.time.Clock()
 pygame.mixer.music.load("bg_music.mp3")
 pygame.mixer.music.set_volume(0.1)
 
 # Открываем окно игры, включаем музыку
+Dot_s = Dots()
 Sound.channel.play(Sound.opening)
 wSurface.fill((0, 0, 0))
 wSurface.blit(background, (100, 0))
 wSurface.blit(corona.getScoreSurface(), (10, 10))
 wSurface.blit(corona.getLivesSurface(), (WINDOWSIZE[0] - 200, 10))
 for p in small_dots:
-    wSurface.blit(Dots.images[0], (p[0] + Dots.shifts[0][0], p[1] + Dots.shifts[0][1]))
+    wSurface.blit(Dot_s.images[0], (p[0] + Dot_s.shifts[0][0], p[1] + Dot_s.shifts[0][1]))
 for p in large_dots:
-    wSurface.blit(Dots.images[1], (p[0] + Dots.shifts[1][0], p[1] + Dots.shifts[1][1]))
+    wSurface.blit(Dot_s.images[1], (p[0] + Dot_s.shifts[1][0], p[1] + Dot_s.shifts[1][1]))
 for cur_anti in antybody:
     wSurface.blit(cur_anti.surface, cur_anti.rect)
 wSurface.blit(corona.surface, corona.rect)
@@ -87,12 +88,14 @@ while game_is_on:
 
         # Проверяем, должен ли телепортироваться вирус
         corona.teleport()
+        for anti in antybody:
+            anti.teleport()
 
         # Организуем с помощью sprite повороты вируса, анимацию
         corona.getSurface()
-
+        Dot_s = Dots()
         # Проверяяем, съел ли вирус точку, удаляем ее, если да
-        Dots.check(Dots(), small_dots, large_dots, corona, antybody)
+        Dot_s.check(small_dots, large_dots, corona, antybody)
 
         # Добавляем антитело при необходимости
         AntiBody.add(AntiBody(), antybody)
@@ -107,14 +110,15 @@ while game_is_on:
             cur_anti.move_antibody(walls, corona)
 
         # Draw screen
+        Dot_s = Dots()
         wSurface.fill((0, 0, 0))
         wSurface.blit(background, (100, 0))
         wSurface.blit(corona.getScoreSurface(), (10, 10))
         wSurface.blit(corona.getLivesSurface(), (WINDOWSIZE[0] - 200, 10))
         for p in small_dots:
-            wSurface.blit(Dots.images[0], (p[0] + Dots.shifts[0][0], p[1] + Dots.shifts[0][1]))
+            wSurface.blit(Dot_s.images[0], (p[0] + Dot_s.shifts[0][0], p[1] + Dot_s.shifts[0][1]))
         for p in large_dots:
-            wSurface.blit(Dots.images[1], (p[0] + Dots.shifts[1][0], p[1] + Dots.shifts[1][1]))
+            wSurface.blit(Dot_s.images[1], (p[0] + Dot_s.shifts[1][0], p[1] + Dot_s.shifts[1][1]))
         for cur_anti in antybody:
             wSurface.blit(cur_anti.surface, cur_anti.rect)
         wSurface.blit(corona.surface, corona.rect)

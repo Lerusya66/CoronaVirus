@@ -1,13 +1,11 @@
 import pygame
 
 
-class Pattern():
-    def createList(self):
-        '''in - (self)
-        Creates a list of wall Rect objects.
-        out - list'''
+class Pattern:
+    def __init__(self):
+
         pattern = []
-        # walls.append(pygame.Rect((x, y), (width, height)))
+        # pattern.append(pygame.Rect((x, y), (width, height)))
         pattern.append(pygame.Rect((99, 47), (447, 7)))
         pattern.append(pygame.Rect((99, 54), (7, 152)))
         pattern.append(pygame.Rect((99, 199), (7, 63)))
@@ -65,4 +63,4 @@ class Pattern():
         pattern.append(pygame.Rect((315, 455), (16, 50)))
         # Стена блокирует центр игрового поля, создает ловушку для антител
         pattern.append(pygame.Rect((268, 248), (112, 64)))
-        return pattern
+        self.walls = pattern[:]

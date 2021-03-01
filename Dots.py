@@ -3,12 +3,13 @@ import pygame
 from Sound import Sound
 
 
-class Dots():
-    images = [pygame.image.load("dot.png").convert(), \
-              pygame.image.load("bigdot.png").convert()]
-    imageRects = [images[0].get_rect(), images[1].get_rect()]
-    shifts = [(-images[0].get_width() / 2, -images[0].get_height() / 2), \
-              (-images[1].get_width() / 2, -images[1].get_height() / 2)]
+class Dots:
+    def __init__(self):
+        self.images = [pygame.image.load("dot.png").convert(), \
+                       pygame.image.load("bigdot.png").convert()]
+        self.imageRects = [self.images[0].get_rect(), self.images[1].get_rect()]
+        self.shifts = [(-self.images[0].get_width() / 2, -self.images[0].get_height() / 2), \
+                       (-self.images[1].get_width() / 2, -self.images[1].get_height() / 2)]
 
     def createListSmall(self):
         # список маленьких точек
@@ -112,11 +113,10 @@ class Dots():
         dots.append((525, 520))
         return dots
 
-    def check(self, small_dots, large_dots, corona, bacteria):
-        '''in - (self, list of small pellets, list of large pellets, pacman, list of ghosts)
-        Проверяет, проглочены ли вирусом точки, удаляет съеденное, воспроизводит звук.'''
+    def check(self, small_dots, large_dots, corona, antibody):
+        #  Проверяет, проглочены ли вирусом точки, удаляет съеденное, воспроизводит звук.
         for i, p in enumerate(small_dots[:]):
-            p_rect = Dots.imageRects[0]
+            p_rect = self.imageRects[0]
             (p_rect.centerx, p_rect.centery) = p
             if p_rect.colliderect(corona.rect):
                 del small_dots[i]
@@ -125,10 +125,10 @@ class Dots():
                     Sound.channel.play(Sound.pickUp_small)
 
         for i, p in enumerate(large_dots[:]):
-            p_rect = Dots.imageRects[1]
+            p_rect = self.imageRects[1]
             (p_rect.centerx, p_rect.centery) = p
             if p_rect.colliderect(corona.rect):
-                for g in bacteria:
+                for g in antibody:
                     g.makeBlue()
                 del large_dots[i]
                 corona.score += 50
