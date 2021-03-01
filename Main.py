@@ -14,7 +14,15 @@ from CoronaVirus import CoronaVirus
 from AntiBody import AntiBody
 from Pattern import Pattern
 from Dots import Dots
-from Sound import Sound
+
+channel = pygame.mixer.Channel(2)
+opening = pygame.mixer.Sound("opening_song.wav")
+pickUp_small = pygame.mixer.Sound("waka_waka.wav")
+pickUp_large = pygame.mixer.Sound("eating_cherry.wav")
+eatGhost = pygame.mixer.Sound("eating_ghost.wav")
+death = pygame.mixer.Sound("pacmandies.wav")
+lose = pygame.mixer.Sound("gameover.wav")
+win = pygame.mixer.Sound("youwin.wav")
 
 # Создаем объекты для игры
 background = pygame.image.load("bg.png").convert()
@@ -29,7 +37,7 @@ pygame.mixer.music.set_volume(0.1)
 
 # Открываем окно игры, включаем музыку
 Dot_s = Dots()
-Sound.channel.play(Sound.opening)
+channel.play(opening)
 wSurface.fill((0, 0, 0))
 wSurface.blit(background, (100, 0))
 wSurface.blit(corona.getScoreSurface(), (10, 10))
@@ -133,12 +141,12 @@ while game_is_on:
                     if corona.lives == 0:
                         game_is_on = False
                     else:
-                        Sound.channel.play(Sound.death)
+                        channel.play(death)
                     break
                 else:  # Ghost is blue
                     del antybody[antybody.index(cur_anti)]
                     corona.score += 100
-                    Sound.channel.play(Sound.eatGhost)
+                    channel.play(eatGhost)
 
 
         # Проверяем, съедены ли все точки
@@ -160,11 +168,11 @@ wSurface.fill((0, 0, 0))
 surface_temp = None
 
 if corona.lives == 0:  # Проигрыш
-    Sound.channel.play(Sound.lose)
+    channel.play(lose)
     surface_temp = corona.getLosingSurface()
 
 elif len(small_dots) == 0 and len(large_dots) == 0:  # Выигрыш
-    Sound.channel.play(Sound.win)
+    channel.play(win)
     surface_temp = corona.getWinningSurface()
 
 if surface_temp != None:  # Игрок проиграл или выиграл, но не вышел из игры

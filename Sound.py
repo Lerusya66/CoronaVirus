@@ -1,7 +1,7 @@
 import pygame
 
 
-class Sound():
+class Sound:
     channel = pygame.mixer.Channel(2)
     opening = pygame.mixer.Sound("opening_song.wav")
     pickUp_small = pygame.mixer.Sound("waka_waka.wav")

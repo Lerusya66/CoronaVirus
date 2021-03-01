@@ -1,6 +1,6 @@
 #  Базовый класс любого персонажа - пакман и призраки
 
-class Character():
+class Character:
     def __init__(self):
         self.surface = None
         self.rect = None
